@@ -1,3 +1,4 @@
+//RunSentimentAnalysis function
 let RunSentimentAnalysis = ()=>{
     textToAnalyze = document.getElementById("textToAnalyze").value;
 
