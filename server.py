@@ -1,3 +1,6 @@
+'''This is the main flask interface for 
+    emotion detector functionality'''
+
 from flask import Flask, render_template, request
 from EmotionDetection import emotion_detector
 
@@ -11,8 +14,10 @@ def detect_emotion():
         and their score for the provided text.
     '''
     text_to_analyze = request.args.get('textToAnalyze')
-    response = emotion_detector(text_to_analyze)
-
+    response, status_code = emotion_detector(text_to_analyze)
+    dominant_emotion = response.get('dominant_emotion')
+    if dominant_emotion is None:
+        return "Invalid text! Please try again!."
     # 1. Extract and format the individual emotion scores
     emotions = ["anger", "disgust", "fear", "joy", "sadness"]
     score_strings = [f"'{emo}': {response[emo]}" for emo in emotions]
@@ -21,7 +26,10 @@ def detect_emotion():
     scores_part = ", ".join(score_strings[:-1]) + f" and {score_strings[-1]}"
 
     # 3. Construct the final string
-    result = f"For the given statement, the system response is {scores_part}. The dominant emotion is {response['dominant_emotion']}."
+    result = (
+    f"For the given statement, the system response is {scores_part}. "
+    f"The dominant emotion is {response['dominant_emotion']}."
+    )
     return result
 
 @app.route("/")
@@ -32,6 +40,5 @@ def render_index_page():
     return render_template('index.html')
 
 if __name__ == "__main__":
-    ''' This functions executes the flask app and deploys it on localhost:5000
-    '''
+    #This functions executes the flask app and deploys it on localhost:5000
     app.run(host="0.0.0.0", port=5000)

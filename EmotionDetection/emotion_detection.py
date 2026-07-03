@@ -1,6 +1,17 @@
 import requests, json
 
 def emotion_detector(text_to_analyze):
+    if text_to_analyze == "":
+        formatted_response = {
+            'anger': None,
+            'disgust': None,
+            'fear': None,
+            'joy': None,
+            'sadness': None,
+            'dominant_emotion': None
+            }
+        return formatted_response, 400
+
     url = "https://sn-watson-emotion.labs.skills.network/v1/watson.runtime.nlp.v1/NlpService/EmotionPredict"
     myobj = { "raw_document": { "text": text_to_analyze } }
     header = {"grpc-metadata-mm-model-id": "emotion_aggregated-workflow_lang_en_stock"}
@@ -21,4 +32,4 @@ def emotion_detector(text_to_analyze):
     'sadness': sadness_score,
     'dominant_emotion': dominant_emotion
     }
-    return formatted_response
+    return formatted_response, 200
